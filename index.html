@@ -6,19 +6,39 @@
     <title>Snowboard Ordering form</title>
     <script>
         function calculateTotal() {
-            // Retrieve quantity and price input values
-            var quantity = document.getElementById("quantity").value;
+            // Retrieve quantity, price, and discount input values
+            var quantity = parseInt(document.getElementById("quantity").value, 10);
             var pricePerSnowboard = document.getElementById("price").value;
             var taxRate = document.getElementById("tax").value;
+            var discountData = calculateDiscount(quantity);
 
-            // Calculate total without tax
-            var totalWithoutTax = quantity * pricePerSnowboard;
+            // Calculate total without tax after applying discount
+            var totalWithoutTax = (quantity * pricePerSnowboard) - discountData.amount;
 
             // Calculate total with tax
             var totalWithTax = totalWithoutTax + (totalWithoutTax * (taxRate / 100));
 
-            // Display the total with tax in the form
-            document.getElementById("total").innerText = "Total with Tax: $" + totalWithTax.toFixed(2);
+            // Display the discount rate and total with tax in the form
+            document.getElementById("total").innerText = "Discount Rate: " + discountData.rate + "%\nTotal with Tax: $" + totalWithTax.toFixed(2);
+        }
+
+        function calculateDiscount(quantity) {
+            var discountRate = 0;
+
+            // Apply 10% discount for 2 snowboards
+            if (quantity === 2) {
+                discountRate = 10;
+            }
+
+            // Apply 15% discount for 3 snowboards
+            if (quantity >= 3) {
+                discountRate = 15;
+            }
+
+            // Calculate discount amount
+            var discountAmount = (quantity * document.getElementById("price").value * discountRate) / 100;
+
+            return { rate: discountRate, amount: discountAmount };
         }
     </script>
 </head>
@@ -40,3 +60,5 @@
 
     <!-- Display total here -->
     <p id="total"></p>
+</body>
+</html>
